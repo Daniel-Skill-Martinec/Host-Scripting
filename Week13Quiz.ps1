@@ -1,16 +1,17 @@
 # Daniel Martinec 4/11/2024
 
-function check-service {
-    Get-Service -name "s*" | Sort-Object status -descending | Format-Table DisplayName, Status
+function check-service($startLetter) {
+    Get-Service -name $startLetter | Sort-Object status -descending | Format-Table DisplayName, Status
 }
 
-$crs = 'check-service'
+check-service("a*")
 
+$crs = check-service($startLetter)
 
-$servRun = "SysMain"
+$servRun = "Cellular Time"
 
-if(get-service -name $servRun) {
-    Write-Host 'Not Running'
-} else {
+if(get-service $servRun | Where-Object {$_.Status -eq "Running"}) {
     Write-Host 'Running'
+} else {
+    Write-Host 'Not Running'
 }
