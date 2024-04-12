@@ -1,11 +1,15 @@
 function installFeature {
-    $givenfeature = "telnet-client"
+    param (
+        [string]$givenfeature
+    )
 
     $checkInstall = Get-WindowsFeature | Where-Object {$_.Name -eq $givenfeature}
 
     if(-not $checkinstall.installed) {
         try {
-            Install-WindowsFeature -name $givenfeature
+            $logFilePath = "$env:USERPROFILE\feature.log"
+            Add-WindowsFeature -Name $givenfeature -LogPath $logFilePath
+            Write-Host "Installation of $givenfeature succeeded."
         }
         catch {
             write-host 'Installation Failed'
@@ -16,4 +20,4 @@ function installFeature {
     }
 }
 
-installFeature
+installFeature -givenfeature "telnet-client"
